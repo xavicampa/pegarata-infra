@@ -1,7 +1,7 @@
-terraform {
-    backend "gcs" {
-        bucket = "xavic-tfstate-bucket"
-        prefix = "gke-cluster"
-        credentials = "../creds.json"
-    }
-}
+# terraform {
+#     backend "gcs" {
+#         bucket = "xavic-tfstate-bucket"
+#         prefix = "gke-cluster"
+#         credentials = "../creds.json"
+#     }
+# }

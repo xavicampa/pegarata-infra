@@ -30,28 +30,34 @@ resource "google_service_account" "gke_sa" {
   project      = var.project_id
 }
 
-resource "google_service_account_iam_binding" "gke_sa_logwriter_binding" {
-  service_account_id = google_service_account.gke_sa.name
+resource "google_project_iam_binding" "gke_sa_logwriter_binding" {
+  project = var.project_id
   role  = "roles/logging.logWriter"
-  members = [
-    "serviceAccount:${google_service_account.gke_sa.name}",
-  ]
+  members = ["serviceAccount:${google_service_account.gke_sa.email}"]
 }
 
-resource "google_service_account_iam_binding" "gke_sa_metricwriter_binding" {
-  service_account_id = google_service_account.gke_sa.name
+resource "google_project_iam_binding" "gke_sa_metricwriter_binding" {
+  project = var.project_id
   role  = "roles/monitoring.metricWriter"
-  members = [
-    "serviceAccount:${google_service_account.gke_sa.name}",
-  ]
+  members = ["serviceAccount:${google_service_account.gke_sa.email}"]
 }
 
-resource "google_service_account_iam_binding" "gke_sa_viewer_binding" {
-  service_account_id = google_service_account.gke_sa.name
+resource "google_project_iam_binding" "gke_sa_viewer_binding" {
+  project = var.project_id
   role  = "roles/monitoring.viewer"
-  members = [
-    "serviceAccount:${google_service_account.gke_sa.name}",
-  ]
+  members = ["serviceAccount:${google_service_account.gke_sa.email}"]
+}
+
+resource "google_project_iam_binding" "gke_sa_objectviewer_binding" {
+  project = var.project_id
+  role  = "roles/storage.objectViewer"
+  members = ["serviceAccount:${google_service_account.gke_sa.email}"]
+}
+
+resource "google_service_account" "workloadidentity-sa" {
+  account_id   = "workloadidentity-sa"
+  display_name = "Workload Identity service account"
+  project      = var.project_id
 }
 
 resource "google_container_cluster" "primary" {
@@ -69,6 +75,12 @@ resource "google_container_cluster" "primary" {
   }
 
   network = google_compute_network.vpc_network.self_link
+
+  # VPC-native Cluster
+  ip_allocation_policy {
+    cluster_ipv4_cidr_block  = "/16"
+    services_ipv4_cidr_block = "/22"
+  }
 
   master_auth {
     username = ""
@@ -97,8 +109,9 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/logging.write",
       "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/devstorage.read_only"
     ]
 
-    service_account = google_service_account.gke_sa.name
+    service_account = google_service_account.gke_sa.email
   }
 }
