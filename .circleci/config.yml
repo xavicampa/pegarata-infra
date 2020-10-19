@@ -1,23 +1,26 @@
 version: 2.1
+
 orbs:
   terraform: circleci/terraform@1.0.2
+  gcp-cli: circleci/gcp-cli@1.8.5
+
 jobs:
-  single-job-lifecycle:
+  apply_gke_cluster:
     executor: terraform/default
+    working_directory: ~/terraformTest/gke_cluster
     steps:
+      - gcp-cli/install
+      - gcp-cli/initialize
       - checkout
-      - terraform/init:
-          path: .
-      - terraform/validate:
-          path: .
-      - terraform/fmt:
-          path: .
-      - terraform/plan:
-          path: .
-      - terraform/apply:
-          path: .
-    working_directory: ~/gke_cluster
+      - terraform/init
+      - terraform/validate
+      - terraform/fmt
+      - terraform/plan
+      #- terraform/apply:
+      #    path: gke_cluster
+    #working_directory: ~/gke_cluster
+
 workflows:
   single-job-lifecycle:
     jobs:
-      - single-job-lifecycle
+      - apply_gke_cluster
