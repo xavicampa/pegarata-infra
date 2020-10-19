@@ -9,6 +9,7 @@ jobs:
     executor: terraform/default
     working_directory: ~/terraformTest/gke_cluster
     steps:
+      - run: apk add bash curl python3-dev
       - gcp-cli/install
       - gcp-cli/initialize
       - checkout
