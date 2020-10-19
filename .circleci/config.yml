@@ -8,6 +8,7 @@ jobs:
   apply_gke_cluster:
     executor: terraform/default
     shell: /bin/bash -eo pipefail
+    working_directory: /root/terraformTest
     steps:
       - checkout
       - run:
@@ -15,8 +16,8 @@ jobs:
           command: apk add bash curl python3-dev
       - run: curl https://sdk.cloud.google.com > install.sh
       - run: bash install.sh --disable-prompts
-      - run: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-      - run: /root/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+      - run: echo $GCLOUD_SERVICE_KEY > creds.json
+      - run: /root/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=creds.json
       - run: /root/google-cloud-sdk/bin/gcloud --quiet config set project $GOOGLE_PROJECT_ID
       - run: /root/google-cloud-sdk/bin/gcloud --quiet config set compute/zone $GOOGLE_COMPUTE_ZONE
       - terraform/init:
