@@ -14,7 +14,7 @@ jobs:
           shell: /bin/sh -eo pipefail
           command: apk add bash curl python3-dev
       - run: curl https://sdk.cloud.google.com > install.sh
-      - run: bash install.sh --disable-prompts
+      - run: bash install.sh --disable-prompts --install-dir=/bin
       #- run: curl -sSL https://sdk.cloud.google.com | bash
       #- gcp-cli/install
       - gcp-cli/initialize
