@@ -10,6 +10,7 @@ jobs:
     shell: /bin/bash -eo pipefail
     steps:
       - checkout
+      
       - run:
           shell: /bin/sh -eo pipefail
           command: apk add bash curl python3-dev
@@ -17,7 +18,6 @@ jobs:
       - run: curl https://sdk.cloud.google.com > install.sh
       - run: bash install.sh --disable-prompts
       - run: echo $GCLOUD_SERVICE_KEY > creds.json
-      #- run: ls -la
       - run: /root/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=creds.json
       - run: /root/google-cloud-sdk/bin/gcloud --quiet config set project $GOOGLE_PROJECT_ID
       - run: /root/google-cloud-sdk/bin/gcloud --quiet config set compute/zone $GOOGLE_COMPUTE_ZONE
@@ -30,8 +30,8 @@ jobs:
           path: gke_cluster
       - terraform/plan:
           path: gke_cluster
-      #- terraform/apply:
-      #    path: gke_cluster
+      - terraform/apply:
+          path: gke_cluster
 
 workflows:
   single-job-lifecycle:
