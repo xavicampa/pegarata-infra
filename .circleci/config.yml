@@ -1,0 +1,23 @@
+version: 2.1
+orbs:
+  terraform: circleci/terraform@1.0.2
+jobs:
+  single-job-lifecycle:
+    executor: terraform/default
+    steps:
+      - checkout
+      - terraform/init:
+          path: .
+      - terraform/validate:
+          path: .
+      - terraform/fmt:
+          path: .
+      - terraform/plan:
+          path: .
+      - terraform/apply:
+          path: .
+    working_directory: ~/gke_cluster
+workflows:
+  single-job-lifecycle:
+    jobs:
+      - single-job-lifecycle
