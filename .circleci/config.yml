@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   terraform: circleci/terraform@1.0.2
   gcp-cli: circleci/gcp-cli@1.8.5
+  discord: antonioned/discord@0.1.0
 
 jobs:
   apply_gke_cluster:
@@ -32,6 +33,8 @@ jobs:
           path: gke_cluster
       - terraform/apply:
           path: gke_cluster
+
+      - discord/status
 
 workflows:
   single-job-lifecycle:
