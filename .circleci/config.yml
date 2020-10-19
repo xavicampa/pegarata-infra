@@ -7,7 +7,6 @@ orbs:
 jobs:
   apply_gke_cluster:
     executor: terraform/default
-    working_directory: ~/terraformTest/gke_cluster
     shell: /bin/bash -eo pipefail
     steps:
       - checkout
@@ -15,15 +14,19 @@ jobs:
           shell: /bin/sh -eo pipefail
           command: apk add bash curl python3-dev
       - run: curl https://sdk.cloud.google.com > install.sh
-      - run: bash install.sh --disable-prompts --install-dir=/bin
+      - run: bash install.sh --disable-prompts
       - run: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-      - run: /bin/google-cloud-sdk/gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-      - run: /bin/google-cloud-sdk/gcloud --quiet config set project $GOOGLE_PROJECT_ID
-      - run: /bin/google-cloud-sdk/gcloud --quiet config set compute/zone $GOOGLE_COMPUTE_ZONE
-      - terraform/init
-      - terraform/validate
-      - terraform/fmt
-      - terraform/plan
+      - run: /root/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+      - run: /root/google-cloud-sdk/bin/gcloud --quiet config set project $GOOGLE_PROJECT_ID
+      - run: /root/google-cloud-sdk//bingcloud --quiet config set compute/zone $GOOGLE_COMPUTE_ZONE
+      - terraform/init:
+          path: gke_cluster
+      - terraform/validate:
+          path: gke_cluster
+      - terraform/fmt:
+          path: gke_cluster
+      - terraform/plan:
+          path: gke_cluster
       #- terraform/apply:
       #    path: gke_cluster
     #working_directory: ~/gke_cluster
