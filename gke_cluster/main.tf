@@ -4,16 +4,16 @@ terraform {
       source = "hashicorp/google"
     }
     random = {
-      source  = "hashicorp/random"
+      source = "hashicorp/random"
     }
   }
 }
 
 provider "google" {
-  version = "~> 3.42.0"
+  version     = "~> 3.42.0"
   credentials = file(var.cred_file)
-  project = var.project_id
-  region = var.region
+  project     = var.project_id
+  region      = var.region
 }
 
 provider "random" {
@@ -32,25 +32,25 @@ resource "google_service_account" "gke_sa" {
 
 resource "google_project_iam_binding" "gke_sa_logwriter_binding" {
   project = var.project_id
-  role  = "roles/logging.logWriter"
+  role    = "roles/logging.logWriter"
   members = ["serviceAccount:${google_service_account.gke_sa.email}"]
 }
 
 resource "google_project_iam_binding" "gke_sa_metricwriter_binding" {
   project = var.project_id
-  role  = "roles/monitoring.metricWriter"
+  role    = "roles/monitoring.metricWriter"
   members = ["serviceAccount:${google_service_account.gke_sa.email}"]
 }
 
 resource "google_project_iam_binding" "gke_sa_viewer_binding" {
   project = var.project_id
-  role  = "roles/monitoring.viewer"
+  role    = "roles/monitoring.viewer"
   members = ["serviceAccount:${google_service_account.gke_sa.email}"]
 }
 
 resource "google_project_iam_binding" "gke_sa_objectviewer_binding" {
   project = var.project_id
-  role  = "roles/storage.objectViewer"
+  role    = "roles/storage.objectViewer"
   members = ["serviceAccount:${google_service_account.gke_sa.email}"]
 }
 
