@@ -8,8 +8,11 @@ jobs:
   apply_gke_cluster:
     executor: terraform/default
     working_directory: ~/terraformTest/gke_cluster
+    shell: /bin/bash -eo pipefail
     steps:
-      - run: apk add bash curl python3-dev
+      - run:
+          shell: /bin/sh -eo pipefail
+          command: apk add bash curl python3-dev
       - run: curl https://sdk.cloud.google.com > install.sh
       - run: bash install.sh --disable-prompts
       #- run: curl -sSL https://sdk.cloud.google.com | bash
