@@ -20,13 +20,13 @@ jobs:
       - run: /root/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=../creds.json
       - run: /root/google-cloud-sdk/bin/gcloud --quiet config set project $GOOGLE_PROJECT_ID
       - run: /root/google-cloud-sdk/bin/gcloud --quiet config set compute/zone $GOOGLE_COMPUTE_ZONE
-      - terraform/init:
+      - terraform/init
       #    path: gke_cluster
-      - terraform/validate:
+      - terraform/validate
       #    path: gke_cluster
-      - terraform/fmt:
+      - terraform/fmt
       #    path: gke_cluster
-      - terraform/plan:
+      - terraform/plan
       #    path: gke_cluster
       #- terraform/apply:
       #    path: gke_cluster
