@@ -10,7 +10,9 @@ jobs:
     working_directory: ~/terraformTest/gke_cluster
     steps:
       - run: apk add bash curl python3-dev
-      - run: curl -sSL https://sdk.cloud.google.com | bash
+      - run: curl https://sdk.cloud.google.com > install.sh
+      - run: bash install.sh --disable-prompts
+      #- run: curl -sSL https://sdk.cloud.google.com | bash
       #- gcp-cli/install
       - gcp-cli/initialize
       - checkout
